@@ -60,11 +60,18 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		 <!-- devtools : auto restarting your app, and refreshing the browser to view code's change.  -->
+		<!-- devtools : auto restarting your app, and refreshing the browser to 
+			view code's change. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
+		</dependency>
+
+		<!-- security -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 	</dependencies>
 
