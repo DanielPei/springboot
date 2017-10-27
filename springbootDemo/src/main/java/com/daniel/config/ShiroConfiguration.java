@@ -1,5 +1,8 @@
 package com.daniel.config;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -10,9 +13,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 /**
  * shiro配置项
@@ -32,7 +32,7 @@ public class ShiroConfiguration {
 //    public HashedCredentialsMatcher hashedCredentialsMatcher() {
 //        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
 //        credentialsMatcher.setHashAlgorithmName("MD5");
-//        credentialsMatcher.setHashIterations(2);
+//        credentialsMatcher.setHashIterations(1);
 //        credentialsMatcher.setStoredCredentialsHexEncoded(true);
 //        return credentialsMatcher;
 //    }
@@ -72,16 +72,18 @@ public class ShiroConfiguration {
 //        shiroFilterFactoryBean.setFilters(filters);
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
+        
         filterChainDefinitionManager.put("/logout", "logout");
-        filterChainDefinitionManager.put("/user/**", "authc,roles[user]");
-        filterChainDefinitionManager.put("/shop/**", "authc,roles[shop]");
+//        filterChainDefinitionManager.put("/user/**", "authc,roles[user]");
+//        filterChainDefinitionManager.put("/shop/**", "authc,roles[shop]");
         filterChainDefinitionManager.put("/admin/**", "authc,roles[admin]");
         filterChainDefinitionManager.put("/login", "anon");//anon 可以理解为不拦截
         filterChainDefinitionManager.put("/ajaxLogin", "anon");//anon 可以理解为不拦截
-        filterChainDefinitionManager.put("/statistic/**",  "anon");//静态资源不拦截
-        filterChainDefinitionManager.put("/**",  "authc,roles[user]");//其他资源全部拦截
+        filterChainDefinitionManager.put("/static/**",  "anon");//静态资源不拦截
+        filterChainDefinitionManager.put("/templates/error/**",  "anon");//静态资源不拦截
+        filterChainDefinitionManager.put("/**",  "authc");//其他资源全部拦截
+        
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionManager);
-
         shiroFilterFactoryBean.setLoginUrl("/login");
         shiroFilterFactoryBean.setSuccessUrl("/");
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");
@@ -105,9 +107,9 @@ public class ShiroConfiguration {
     }
 
     //thymeleaf模板引擎和shiro整合时使用
-    /*@Bean(name = "shiroDialect")
-    public ShiroDialect shiroDialect(){
-        return new ShiroDialect();
-    }*/
+//    @Bean(name = "shiroDialect")
+//    public ShiroDialect shiroDialect(){
+//        return new ShiroDialect();
+//    }
 
 }
