@@ -16,8 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.daniel.dao.TPermissionDao;
-import com.daniel.dao.TRoleDao;
 import com.daniel.dao.TUserDao;
 import com.daniel.entity.Permission;
 import com.daniel.entity.Role;
@@ -30,10 +28,10 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private TUserDao userDao;
-    @Autowired
-    private TRoleDao roleDao;
-    @Autowired
-    private TPermissionDao permissionDao;
+//    @Autowired
+//    private TRoleDao roleDao;
+//    @Autowired
+//    private TPermissionDao permissionDao;
 
     /**
      * 登录认证

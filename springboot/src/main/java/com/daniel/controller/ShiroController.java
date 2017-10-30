@@ -13,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.daniel.constant.Constant;
 import com.daniel.entity.User;
@@ -23,6 +23,12 @@ public class ShiroController {
 	
 	private static Logger logger = LoggerFactory.getLogger(ShiroController.class);
 	
+	// 跳转到登录表单页面
+	@RequestMapping(value = "/")
+	public String index() {
+		return "/index";
+	}
+
 	// 跳转到登录表单页面
 	@RequestMapping(value = "/login")
 	public String login() {
@@ -46,7 +52,7 @@ public class ShiroController {
 							+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 					System.out.println("用户[" + user.getUsername()
 							+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
-					return "/";
+					return "/index";
 				} else {
 					token.clear();
 					System.out.println("用户[" + user.getUsername()
@@ -77,9 +83,8 @@ public class ShiroController {
 	 * @return
 	 */
 	@RequestMapping(value = "/ajaxLogin", method = RequestMethod.POST)
-	@ResponseBody
 	public String submitLogin(String username, String password,
-			Model model) {
+			Model model,RedirectAttributes redirectAttrs) {
 		try {
 
 			UsernamePasswordToken token = new UsernamePasswordToken(username,
@@ -92,12 +97,19 @@ public class ShiroController {
 						+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 				System.out.println("用户[" + username
 						+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
+				//	为重定向添加一些属性
+				redirectAttrs.addFlashAttribute("name", username);  
+				
+				//	使用依赖spring mvc的 ViewResolver直接跳转，会去映射controller里的mapper "/",跳转到"/index.html",浏览器地址栏为"/"
 				return "redirect:/";
+				
+				//	直接映射页面路径 /index.html,浏览器地址栏为"/index.html";
+				//	return "/index";
 			} else {
 				token.clear();
 				System.out.println("用户[" + username
 						+ "]登录认证失败,重新登陆");
-				return "redirect:/login";
+				return "/login";
 			}
 		} catch (UnknownAccountException uae) {
 			logger.info("对用户[" + username

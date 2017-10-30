@@ -73,10 +73,11 @@ public class ShiroConfiguration {
         System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
         
-        filterChainDefinitionManager.put("/logout", "logout");
+        filterChainDefinitionManager.put("/logout", "anon");
 //        filterChainDefinitionManager.put("/user/**", "authc,roles[user]");
 //        filterChainDefinitionManager.put("/shop/**", "authc,roles[shop]");
         filterChainDefinitionManager.put("/admin/**", "authc,roles[admin]");
+        filterChainDefinitionManager.put("/hello/**", "authc,roles[hello]");
         filterChainDefinitionManager.put("/login", "anon");//anon 可以理解为不拦截
         filterChainDefinitionManager.put("/ajaxLogin", "anon");//anon 可以理解为不拦截
         filterChainDefinitionManager.put("/static/**",  "anon");//静态资源不拦截

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,12 +22,12 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String rolename;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)	// 一个entity中如果有多个定义为 fetch = FetchType.EAGER 的字段会报错，可考虑将List改为set解决该问题
     @JoinTable(name = "t_role_permission", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = {
             @JoinColumn(name = "permission_id") })
     private List<Permission> permissionList;// 一个角色对应多个权限
     
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "role_id") }, inverseJoinColumns = {
             @JoinColumn(name = "user_id") })
     private List<User> userList;// 一个角色对应多个用户
