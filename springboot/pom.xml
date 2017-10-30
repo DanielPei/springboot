@@ -59,6 +59,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		
+		<!-- thymeleaf shiro tag -->
+		<dependency>
+			<groupId>com.github.theborakompanioni</groupId>
+			<artifactId>thymeleaf-extras-shiro</artifactId>
+			<version>1.2.1</version>
+		</dependency>
 
 		<!-- devtools : auto restarting your app, and refreshing the browser to 
 			view code's change. -->
@@ -68,18 +75,15 @@
 			<optional>true</optional>
 		</dependency>
 
-       <!-- Spirng data JPA依赖; -->  
+		<!-- Spirng data JPA依赖; -->
 		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-data-jpa</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 		<!-- mybatis -->
-<!-- 		<dependency>
-			<groupId>org.mybatis.spring.boot</groupId>
-			<artifactId>mybatis-spring-boot-starter</artifactId>
-			<version>1.1.1</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.mybatis.spring.boot</groupId> <artifactId>mybatis-spring-boot-starter</artifactId> 
+			<version>1.1.1</version> </dependency> -->
 
 		<dependency>
 			<groupId>mysql</groupId>
@@ -107,7 +111,7 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>

@@ -2,6 +2,7 @@ package com.daniel.controller;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.daniel.constant.Constant;
-import com.daniel.entity.User;
 
 @Controller
 public class ShiroController {
@@ -30,51 +30,11 @@ public class ShiroController {
 	}
 
 	// 跳转到登录表单页面
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/login",method=RequestMethod.GET)
 	public String login() {
 		return "/login";
 	}
 	
-	// 登陆验证，这里方便url测试，正式上线需要使用POST方式提交
-	@RequestMapping(value = "/ajaxLogin", method = RequestMethod.GET)
-	public String index(User user) {
-		if (user.getUsername() != null && user.getPassword()!= null) {
-			UsernamePasswordToken token = new UsernamePasswordToken(
-					user.getUsername(), user.getPassword(), "login");
-			Subject currentUser = SecurityUtils.getSubject();
-			
-			logger.info("对用户[" + user.getUsername() + "]进行登录验证..验证开始");
-			try {
-				currentUser.login(token);
-				// 验证是否登录成功
-				if (currentUser.isAuthenticated()) {
-					logger.info("用户[" + user.getUsername()
-							+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
-					System.out.println("用户[" + user.getUsername()
-							+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
-					return "/index";
-				} else {
-					token.clear();
-					System.out.println("用户[" + user.getUsername()
-							+ "]登录认证失败,重新登陆");
-					return "/login";
-				}
-			} catch (UnknownAccountException uae) {
-				logger.info("对用户[" + user.getUsername()
-						+ "]进行登录验证..验证失败-username wasn't in the system");
-			} catch (IncorrectCredentialsException ice) {
-				logger.info("对用户[" + user.getUsername()
-						+ "]进行登录验证..验证失败-password didn't match");
-			} catch (LockedAccountException lae) {
-				logger.info("对用户[" + user.getUsername()
-						+ "]进行登录验证..验证失败-account is locked in the system");
-			} catch (AuthenticationException ae) {
-				logger.error(ae.getMessage());
-			}
-		}
-		return "/login";
-	}
-
 	/**
 	 * ajax登录请求接口方式登陆
 	 * 
@@ -82,9 +42,9 @@ public class ShiroController {
 	 * @param password
 	 * @return
 	 */
-	@RequestMapping(value = "/ajaxLogin", method = RequestMethod.POST)
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String submitLogin(String username, String password,
-			Model model,RedirectAttributes redirectAttrs) {
+			Model model,RedirectAttributes redirectAttributes) {
 		try {
 
 			UsernamePasswordToken token = new UsernamePasswordToken(username,
@@ -98,7 +58,7 @@ public class ShiroController {
 				System.out.println("用户[" + username
 						+ "]登录认证通过(这里可以进行一些认证通过后的一些系统参数初始化操作)");
 				//	为重定向添加一些属性
-				redirectAttrs.addFlashAttribute("name", username);  
+				redirectAttributes.addFlashAttribute("name", username);  
 				
 				//	使用依赖spring mvc的 ViewResolver直接跳转，会去映射controller里的mapper "/",跳转到"/index.html",浏览器地址栏为"/"
 				return "redirect:/";
@@ -107,24 +67,38 @@ public class ShiroController {
 				//	return "/index";
 			} else {
 				token.clear();
-				System.out.println("用户[" + username
-						+ "]登录认证失败,重新登陆");
-				return "/login";
+				logger.info("用户[" + username + "]登录认证失败,重新登陆");
+				return "redirect:/login";
 			}
-		} catch (UnknownAccountException uae) {
-			logger.info("对用户[" + username
-					+ "]进行登录验证..验证失败-username wasn't in the system");
-		} catch (IncorrectCredentialsException ice) {
-			logger.info("对用户[" + username
-					+ "]进行登录验证..验证失败-password didn't match");
-		} catch (LockedAccountException lae) {
-			logger.info("对用户[" + username
-					+ "]进行登录验证..验证失败-account is locked in the system");
-		} catch (AuthenticationException ae) {
-			logger.error(ae.getMessage());
-		}
-		return "/login";
+		}catch(UnknownAccountException uae){  
+            logger.info("对用户[" + username + "]进行登录验证..验证未通过,未知账户");  
+            redirectAttributes.addFlashAttribute("message", "未知账户");  
+        }catch(IncorrectCredentialsException ice){  
+            logger.info("对用户[" + username + "]进行登录验证..验证未通过,错误的凭证");  
+            redirectAttributes.addFlashAttribute("message", "密码不正确");  
+        }catch(LockedAccountException lae){  
+            logger.info("对用户[" + username + "]进行登录验证..验证未通过,账户已锁定");  
+            redirectAttributes.addFlashAttribute("message", "账户已锁定");  
+        }catch(ExcessiveAttemptsException eae){  
+            logger.info("对用户[" + username + "]进行登录验证..验证未通过,错误次数过多");  
+            redirectAttributes.addFlashAttribute("message", "用户名或密码错误次数过多");  
+        }catch(AuthenticationException ae){  
+            //通过处理Shiro的运行时AuthenticationException就可以控制用户登录失败或密码错误时的情景  
+            logger.info("对用户[" + username + "]进行登录验证..验证未通过,堆栈轨迹如下");  
+            ae.printStackTrace();  
+            redirectAttributes.addFlashAttribute("message", "用户名或密码不正确");  
+        }
+		return "redirect:/login";
 	}
+	
+	// 退出登录	
+    @RequestMapping(value="/logout",method=RequestMethod.GET)  
+    public String logout(RedirectAttributes redirectAttributes ){ 
+        //使用权限管理工具进行用户的退出，跳出登录，给出提示信息
+        SecurityUtils.getSubject().logout();  
+        redirectAttributes.addFlashAttribute("param.logout", true);  
+        return "redirect:/login";
+    }
 	
 
 	@RequestMapping("/404")

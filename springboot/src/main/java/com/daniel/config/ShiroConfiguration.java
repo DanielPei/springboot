@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 
+import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
+
 /**
  * shiro配置项
  * Created by Lucare.Feng on 2017/3/6.
@@ -26,6 +28,31 @@ public class ShiroConfiguration {
         return new LifecycleBeanPostProcessor();
     }
 
+    /**
+     * 注册DelegatingFilterProxy（Shiro）
+     * 集成Shiro有2种方法：
+     * 1. 按这个方法自己组装一个FilterRegistrationBean（这种方法更为灵活，可以自己定义UrlPattern，
+     * 在项目使用中你可能会因为一些很但疼的问题最后采用它， 想使用它你可能需要看官网或者已经很了解Shiro的处理原理了）
+     * 2. 直接使用ShiroFilterFactoryBean（这种方法比较简单，其内部对ShiroFilter做了组装工作，无法自己定义UrlPattern，
+     * 默认拦截 /*）
+     *
+     * @param dispatcherServlet
+     * @return
+     * @author SHANHY
+     * @create  2016年1月13日
+     */
+//  @Bean
+//  public FilterRegistrationBean filterRegistrationBean() {
+//      FilterRegistrationBean filterRegistration = new FilterRegistrationBean();
+//      filterRegistration.setFilter(new DelegatingFilterProxy("shiroFilter"));
+//      //  该值缺省为false,表示生命周期由SpringApplicationContext管理,设置为true则表示由ServletContainer管理  
+//      filterRegistration.addInitParameter("targetFilterLifecycle", "true");
+//      filterRegistration.setEnabled(true);
+//      filterRegistration.addUrlPatterns("/*");// 可以自己灵活的定义很多，避免一些根本不需要被Shiro处理的请求被包含进来
+//      return filterRegistration;
+//  }
+    
+    
     //处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
     //指定加密方式方式，也可以在这里加入缓存，当用户超过五次登陆错误就锁定该用户禁止不断尝试登陆
 //    @Bean(name = "hashedCredentialsMatcher")
@@ -65,21 +92,14 @@ public class ShiroConfiguration {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
 
-//        Map<String, Filter> filters = new LinkedHashMap<String, Filter>();
-//        LogoutFilter logoutFilter = new LogoutFilter();
-//        logoutFilter.setRedirectUrl("/login");
-//        filters.put("logout", logoutFilter);
-//        shiroFilterFactoryBean.setFilters(filters);
-        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        System.out.println(">>>>>>>>>>>>>>>>>>>>    shiroFilter     >>>>>>>>>>>>>>>>>>>>>>>");
         Map<String, String> filterChainDefinitionManager = new LinkedHashMap<>();
         
-        filterChainDefinitionManager.put("/logout", "anon");
-//        filterChainDefinitionManager.put("/user/**", "authc,roles[user]");
-//        filterChainDefinitionManager.put("/shop/**", "authc,roles[shop]");
         filterChainDefinitionManager.put("/admin/**", "authc,roles[admin]");
         filterChainDefinitionManager.put("/hello/**", "authc,roles[hello]");
+        
+        filterChainDefinitionManager.put("/logout", "anon");
         filterChainDefinitionManager.put("/login", "anon");//anon 可以理解为不拦截
-        filterChainDefinitionManager.put("/ajaxLogin", "anon");//anon 可以理解为不拦截
         filterChainDefinitionManager.put("/static/**",  "anon");//静态资源不拦截
         filterChainDefinitionManager.put("/templates/error/**",  "anon");//静态资源不拦截
         filterChainDefinitionManager.put("/**",  "authc");//其他资源全部拦截
@@ -108,9 +128,9 @@ public class ShiroConfiguration {
     }
 
     //thymeleaf模板引擎和shiro整合时使用
-//    @Bean(name = "shiroDialect")
-//    public ShiroDialect shiroDialect(){
-//        return new ShiroDialect();
-//    }
+    @Bean(name = "shiroDialect")
+    public ShiroDialect shiroDialect(){
+        return new ShiroDialect();
+    }
 
 }
