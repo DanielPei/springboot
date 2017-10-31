@@ -12,6 +12,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,11 @@ public class ShiroRealm extends AuthorizingRealm {
         //查出是否有此用户
         User hasUser = userDao.findByUsername(token.getUsername());
         if (hasUser != null) {
-            return new SimpleAuthenticationInfo(hasUser, hasUser.getPassword(), getName());
+        	AuthenticationInfo authcInfo = new SimpleAuthenticationInfo(hasUser, hasUser.getPassword(), getName());
+//        	System.out.println("==============>SALT:" + hasUser.getSalt());
+//        	设置盐值为 用户名 + SALT
+        	 ((SimpleAuthenticationInfo) authcInfo).setCredentialsSalt(ByteSource.Util.bytes(hasUser.getUsername()+hasUser.getSalt())); //盐是用户名+加密密码  
+            return authcInfo;
         }
         return null;
     }

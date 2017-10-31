@@ -28,6 +28,9 @@ public class User {
 	private String username;
 	@NotEmpty(message = "密码不能为空")
 	private String password;
+
+	private String salt;
+
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "t_user_role", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "role_id") })
 	private List<Role> roleList;// 一个用户具有多个角色
@@ -74,6 +77,14 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 	public List<Role> getRoleList() {

@@ -26,7 +26,7 @@ public class ShiroConfiguration {
 	
 //    public static void main(String[] args) {
 //        //得到盐值加密后的密码：只用于方便数据库测试，后期不会用到。
-//        Object md = new SimpleHash("MD5","hello","",2);
+//        Object md = new SimpleHash("MD5","hello","helloaaa",2);
 //        System.out.println("盐值加密后的密码："+md);
 //  	}
 	
@@ -67,6 +67,8 @@ public class ShiroConfiguration {
         HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
         credentialsMatcher.setHashAlgorithmName("MD5");
         credentialsMatcher.setHashIterations(2);
+        
+//        表示是否存储散列后的密码为16 进制，需要和生成密码时的一样，默认是base64；
 //        credentialsMatcher.setStoredCredentialsHexEncoded(true);
         return credentialsMatcher;
     }
