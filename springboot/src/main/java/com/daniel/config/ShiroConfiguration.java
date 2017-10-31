@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -25,6 +27,11 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
 public class ShiroConfiguration {
 	
 //    public static void main(String[] args) {
+//    	// 生成随机数，可用于作为用户的自定义盐，在创建用户的时候生成并入库
+//    	String salt2 = new SecureRandomNumberGenerator().nextBytes().toHex(); 
+//    	
+//    	System.out.println(salt2);
+//    	
 //        //得到盐值加密后的密码：只用于方便数据库测试，后期不会用到。
 //        Object md = new SimpleHash("MD5","hello","helloaaa",2);
 //        System.out.println("盐值加密后的密码："+md);
