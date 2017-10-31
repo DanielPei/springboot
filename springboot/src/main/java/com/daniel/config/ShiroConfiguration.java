@@ -3,6 +3,7 @@ package com.daniel.config;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.cache.ehcache.EhCacheManager;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
@@ -22,8 +23,14 @@ import at.pollux.thymeleaf.shiro.dialect.ShiroDialect;
  */
 @Configuration
 public class ShiroConfiguration {
-
-    @Bean(name = "lifecycleBeanPostProcessor")
+	
+//    public static void main(String[] args) {
+//        //得到盐值加密后的密码：只用于方便数据库测试，后期不会用到。
+//        Object md = new SimpleHash("MD5","hello");
+//        System.out.println("盐值加密后的密码："+md);
+//  	}
+	
+	@Bean(name = "lifecycleBeanPostProcessor")
     public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
         return new LifecycleBeanPostProcessor();
     }
@@ -55,20 +62,20 @@ public class ShiroConfiguration {
     
     //处理认证匹配处理器：如果自定义需要实现继承HashedCredentialsMatcher
     //指定加密方式方式，也可以在这里加入缓存，当用户超过五次登陆错误就锁定该用户禁止不断尝试登陆
-//    @Bean(name = "hashedCredentialsMatcher")
-//    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-//        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
-//        credentialsMatcher.setHashAlgorithmName("MD5");
-//        credentialsMatcher.setHashIterations(1);
+    @Bean(name = "hashedCredentialsMatcher")
+    public HashedCredentialsMatcher hashedCredentialsMatcher() {
+        HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+        credentialsMatcher.setHashAlgorithmName("MD5");
+        credentialsMatcher.setHashIterations(1);
 //        credentialsMatcher.setStoredCredentialsHexEncoded(true);
-//        return credentialsMatcher;
-//    }
+        return credentialsMatcher;
+    }
 
     @Bean(name = "shiroRealm")
     @DependsOn("lifecycleBeanPostProcessor")
     public ShiroRealm shiroRealm() {
         ShiroRealm realm = new ShiroRealm();
-//        realm.setCredentialsMatcher(hashedCredentialsMatcher());
+        realm.setCredentialsMatcher(hashedCredentialsMatcher());
         return realm;
     }
 
