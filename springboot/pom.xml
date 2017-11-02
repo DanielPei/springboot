@@ -22,6 +22,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+		<activiti.version>5.17.0</activiti.version>
+<!-- 		<activiti.version>5.19.0.2</activiti.version> -->
 	</properties>
 
 	<dependencies>
@@ -60,13 +62,29 @@
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
 
-		 <!-- devtools : auto restarting your app, and refreshing the browser to view code's change.  -->
+		<!-- devtools : auto restarting your app, and refreshing the browser to 
+			view code's change. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>
 		</dependency>
+
+		<!-- acitivit -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>spring-boot-starter-basic</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
 	</dependencies>
+
+
+	<repositories>
+		<repository>
+			<id>mvnrepository</id>
+			<url>http://central.maven.org/maven2/</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
@@ -77,43 +95,7 @@
 		</plugins>
 	</build>
 
-	<repositories>
-		<repository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</repository>
-		<repository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 
-	<pluginRepositories>
-		<pluginRepository>
-			<id>spring-snapshots</id>
-			<name>Spring Snapshots</name>
-			<url>https://repo.spring.io/snapshot</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-		</pluginRepository>
-		<pluginRepository>
-			<id>spring-milestones</id>
-			<name>Spring Milestones</name>
-			<url>https://repo.spring.io/milestone</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 
 </project>
