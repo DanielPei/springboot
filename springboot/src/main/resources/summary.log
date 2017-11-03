@@ -1,0 +1,12 @@
+## 注意事项
+	- maven依赖的版本号问题。不同spring-boot父版本的实现不同，子依赖的artifactId会不同，具体体现在：
+		- 1.5.X版本的 activiti 依赖包 artifactId 要加上 activiti- 前缀；
+		- 1.5.X版本在添加 activiti-spring-boot-starter-actuator 后，要访问 http://localhost:8080/activiti 需要 actuator 权限，但是不知道怎么解决；
+	
+	
+## 使用总结
+	- activiti 的service已经被自动生成，可以直接通过autowired注记进行使用；
+	- 在 src/main/resources/processes/ 文件夹下创建 acitiviti流程文件，会在启动系统时自动 deploy 或 redeploy 新版本；
+	- 如果在 src/main/resources/application.propertis 中配置了数据库连接参数，启动时会自动在相应数据库创建  act_* 数据表；
+	- 流程分支在连接线上输入判断条件；
+	- 后续学习下 activiti 自动发邮件 以及 与前端表单 的关联； 流程节点中直接调用 service ；

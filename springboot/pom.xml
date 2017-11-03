@@ -14,77 +14,59 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.8.BUILD-SNAPSHOT</version>
+		<version>1.3.2.RELEASE</version>
+		<!-- <version>1.5.8.RELEASE</version> -->
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<activiti.version>5.17.0</activiti.version>
-<!-- 		<activiti.version>5.19.0.2</activiti.version> -->
+		<activiti.version>5.19.0.2</activiti.version>
 	</properties>
 
 	<dependencies>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<!-- 添加web支持 -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-
+		</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
 
-		<!-- swagger2 依赖 -->
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-			<version>2.2.2</version>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-			<version>2.2.2</version>
-		</dependency>
 
-		<!-- thymeleaf -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
-
-		<!-- devtools : auto restarting your app, and refreshing the browser to 
-			view code's change. -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-
-		<!-- acitivit -->
+		<!-- activiti -->
 		<dependency>
 			<groupId>org.activiti</groupId>
-			<artifactId>spring-boot-starter-basic</artifactId>
+			<artifactId>activiti-spring-boot-starter-basic</artifactId>
 			<version>${activiti.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-spring-boot-starter-rest-api</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-spring-boot-starter-jpa</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
+		<!-- 运行后访问 http://localhost:8080/activiti 可查看activiti相关属性 -->
+		<dependency>
+			<groupId>org.activiti</groupId>
+			<artifactId>activiti-spring-boot-starter-actuator</artifactId>
+			<version>${activiti.version}</version>
+		</dependency>
+
+		<!-- mysql -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 	</dependencies>
 
-
-	<repositories>
-		<repository>
-			<id>mvnrepository</id>
-			<url>http://central.maven.org/maven2/</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<plugins>
@@ -94,8 +76,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-
-
 
 </project>
